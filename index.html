@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+	<title>Document</title>
+	<style>
+		@keyframes rotation {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Inter', sans-serif;
+		}
+
+		.body {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 1000px;
+			height: 1000px;
+		}
+
+		.widget-background {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.widget-wrap {
+			width: 360px;
+			height: 180px;
+			background: linear-gradient(329.83deg, rgba(0, 0, 0, 0.1) 13.44%, rgba(0, 0, 0, 0) 86.18%), #55AEEE;
+			border-radius: 20px;
+			/* border: 1px solid rgba(33, 76, 111, 0.2); */
+			box-shadow: 0px 4px 20px rgba(0, 59, 101, 0.25);
+			padding: 14px 20px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.time,
+		.temp,
+		.city {
+			font-size: 36px;
+			font-weight: 600;
+			color: white;
+		}
+
+		.temp-feels,
+		.weather-desc,
+		.country,
+		.date {
+			font-size: 12px;
+			color: white;
+			font-weight: 400;
+		}
+
+		.country,
+		.humidity,
+		.pressure {
+			opacity: 0.5;
+		}
+
+		.time-and-temp {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 2px;
+		}
+
+		.date-and-temp-feels {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 7px;
+		}
+
+		.weather-desc {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+
+		}
+
+		.bottom-block {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			gap: 5px;
+		}
+
+		.country-and-city {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			gap: 5px;
+		}
+
+		.temp-and-icon {
+			display: flex;
+			gap: 5px;
+			align-items: center;
+		}
+
+		.image {
+			width: 20px;
+			outline: none;
+		}
+
+		.other-values {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			font-size: 12px;
+			color: white;
+			font-weight: 400;
+			font-size: 8px;
+		}
+
+		.city-and-others {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.city-and-icon {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			position: relative;
+			width: 210px;
+		}
+
+		.city {
+			font-size: 12px;
+		}
+
+		.icon-edit {
+			cursor: pointer;
+			width: 10px;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		.input {
+			position: absolute;
+			border: none;
+			border-radius: 6px;
+			box-shadow: 0px 4px 20px rgba(0, 59, 101, 0.25);
+			height: 30px;
+			width: 210px;
+			outline: none;
+			padding: 5px 10px;
+			top: -15px;
+			left: 0;
+			font-size: 12px;
+			color: rgb(33, 33, 33);
+		}
+
+		.input-wrap {
+			position: absolute;
+		}
+
+		.close {
+			position: absolute;
+			top: -7px;
+			left: 190px;
+			opacity: 0.3;
+			cursor: pointer;
+		}
+
+		.loading-data {
+			color: white;
+		}
+
+		.icon-geo {
+			width: 8px;
+			cursor: pointer;
+		}
+
+		.loader {
+			width: 5px;
+			height: 5px;
+			background-color: white;
+			animation-name: rotation;
+			animation-duration: 5s;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="widget-background">
+		<div class="widget-wrap">
+			<p class="loading-data">Данные о погоде</br>загружаются...</p>
+			<div class="top-block">
+				<div class="time-and-temp">
+					<p class="time"></p>
+					<p class="temp"></p>
+				</div>
+				<div class="date-and-temp-feels">
+					<p class="date"></p>
+					<p class="temp-feels"></p>
+				</div>
+				<div class="weather-desc">
+					<img src="" alt="" class="image">
+					<p class="weather-desc__par"></p>
+				</div>
+			</div>
+
+			<div class="bottom-block">
+				<p class="country"></p>
+				<div class="city-and-others">
+					<div class="city-and-icon">
+
+						<p class="city"></p>
+						<svg class='icon-edit hidden' width="20" height="20" viewBox="0 0 20 20" fill="none"
+							xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M0 15.8339V20H4.16609L16.4533 7.71282L12.2872 3.54673L0 15.8339ZM19.675 4.49104C20.1083 4.05777 20.1083 3.35787 19.675 2.92459L17.0754 0.324955C16.6421 -0.108318 15.9422 -0.108318 15.509 0.324955L13.4759 2.35801L17.642 6.52409L19.675 4.49104V4.49104Z"
+								fill="white" fill-opacity="0.3" />
+						</svg>
+						<svg class='icon-geo hidden' width="14" height="20" viewBox="0 0 14 20" fill="none"
+							xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7 0C3.13 0 0 3.13 0 7C0 12.25 7 20 7 20C7 20 14 12.25 14 7C14 3.13 10.87 0 7 0ZM7 9.5C5.62 9.5 4.5 8.38 4.5 7C4.5 5.62 5.62 4.5 7 4.5C8.38 4.5 9.5 5.62 9.5 7C9.5 8.38 8.38 9.5 7 9.5Z"
+								fill="white" fill-opacity="0.3" />
+						</svg>
+						<div class="loader hidden"></div>
+						<div class="input-wrap">
+							<input type="text" class="input hidden">
+							<svg class='close hidden' width="14" height="14" viewBox="0 0 14 14" fill="none"
+								xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z"
+									fill="#333333" />
+							</svg>
+						</div>
+					</div>
+					<p class="city"></p>
+					<div class="other-values">
+						<p class="humidity"></p>
+						<p class="pressure"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="main.js"></script>
+	<script src="cities.js"></script>
+	<script>
+		const newDate = new Date();
+		const lang = 'ru';
+		const API_KEY = '7465d95274905b30a7908e660386c993';
+		const time = document.querySelector('.time');
+		const temp = document.querySelector('.temp');
+		const date = document.querySelector('.date');
+		const tempFeels = document.querySelector('.temp-feels');
+		const weatherDescPar = document.querySelector('.weather-desc__par');
+		const country = document.querySelector('.country');
+		const city = document.querySelector('.city');
+		const image = document.querySelector('.image');
+		const humidity = document.querySelector('.humidity');
+		const pressure = document.querySelector('.pressure');
+		const iconEdit = document.querySelector('.icon-edit');
+		const iconGeo = document.querySelector('.icon-geo');
+		const input = document.querySelector('.input');
+		const close = document.querySelector('.close');
+		const loadingData = document.querySelector('.loading-data');
+		const cityAndIcon = document.querySelector('.city-and-icon');
+		const loader = document.querySelector('.loader');
+
+		const suggest = document.createElement('div');
+		suggest.classList.add('hidden');
+		suggest.style.boxShadow = '0px 4px 20px rgba(0, 59, 101, 0.25)';
+		suggest.style.fontSize = '12px';
+		suggest.style.backgroundColor = 'white';
+		suggest.style.position = 'absolute';
+		suggest.style.top = '-60px';
+		suggest.style.width = '210px';
+		suggest.style.maxHeight = '50px';
+		suggest.style.borderRadius = '6px';
+		suggest.style.overflowY = 'scroll';
+		suggest.style.padding = '5px 10px';
+		cityAndIcon.append(suggest);
+
+		navigator.geolocation.getCurrentPosition((position) => {
+			const { latitude, longitude } = position.coords;
+			console.log(latitude, longitude);
+			main(latitude, longitude);
+		})
+
+		iconGeo.addEventListener('click', () => {
+			loader.classList.remove('hidden');
+			navigator.geolocation.getCurrentPosition((position) => {
+				const { latitude, longitude } = position.coords;
+				console.log(latitude, longitude);
+				main(latitude, longitude);
+				loader.classList.add('hidden');
+			})
+		})
+
+	</script>
+</body>
+
+</html>
